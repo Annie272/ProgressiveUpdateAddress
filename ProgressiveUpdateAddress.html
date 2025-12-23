@@ -133,6 +133,27 @@
           Address Information 
         </h3>
 
+        <!-- Screenshot field as picklist -->
+        <div class="mb-3">
+          <label
+            for="addressScreenshot"
+            class="block text-sm font-medium text-gray-700"
+          >
+            Address type<span class="star">*</span>
+          </label>
+          <select
+            id="addressScreenshot"
+            name="Address_Type__c"
+            class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">--Select--</option>
+            <option value="Domestic">Domestic</option>
+            <option value="International">
+              International (outside U.S., Puerto Rico and Virgin Islands)
+            </option>
+          </select>
+        </div>
+
         <!-- Address Line 1 -->
         <div class="mb-3">
           <label
@@ -479,17 +500,14 @@
         const proceedBtn = document.getElementById("proceedBtn");
         const editBtn = document.getElementById("editBtn");
 
-        // Vehicle location dropdown and conditional fields
         const vehicleLocationSelect = document.getElementById("vehicleLocationType");
         const otherLocationFields = document.getElementById("otherLocationFields");
 
-        // Show/hide other location fields based on selection
         vehicleLocationSelect.addEventListener("change", function() {
           if (this.value === "Other") {
             otherLocationFields.classList.remove("hidden");
           } else {
             otherLocationFields.classList.add("hidden");
-            // Clear other fields when hidden
             document.getElementById("primaryLocationAddr1").value = "";
             document.getElementById("primaryLocationAddr2").value = "";
             document.getElementById("primaryLocationCity").value = "";
@@ -497,7 +515,6 @@
           }
         });
 
-        // Date picker initialization
         new Pikaday({
           field: document.getElementById("00NU7000005zuLl"),
           format: "MM/DD/YYYY",
@@ -513,7 +530,6 @@
           },
         });
 
-        // Fields for validation - REMOVED requestType from fieldData array
         const fieldData = [
           { id: "email", label: "Email", type: "email" },
           { id: "00NU7000005zuX3", label: "Policy Number" },
@@ -522,6 +538,7 @@
             label: "Effective Date (MM/DD/YYYY)",
             type: "date",
           },
+          { id: "addressScreenshot", label: "Address type (screenshot)" },
           { id: "addressLine1_1", label: "Address Line 1" },
           { id: "addressLine2_1", label: "Address Line 2", optional: true },
           { id: "city1", label: "City" },
@@ -530,11 +547,9 @@
           { id: "vehicleLocationType", label: "Is mailing same as garaging?" }
         ];
 
-        // Validation function with separate request type check
         function validateFields() {
           const missing = [];
-          
-          // Check Request Type radio buttons
+
           const requestTypeRadios = document.getElementsByName("Is_this_a_quote_or_a_change_request__c");
           let requestTypeSelected = false;
           for (let radio of requestTypeRadios) {
@@ -547,7 +562,6 @@
             missing.push("Request Type");
           }
 
-          // Check regular fields
           fieldData.forEach((field) => {
             if (field.type === "email") {
               const input = document.getElementById(field.id);
@@ -568,7 +582,6 @@
             }
           });
 
-          // Additional validation for Other location fields
           if (vehicleLocationSelect.value === "Other") {
             const otherFields = [
               { id: "primaryLocationAddr1", label: "Primary Location Address 1" },
@@ -587,7 +600,6 @@
           return missing;
         }
 
-        // Review button handler
         reviewBtn.addEventListener("click", () => {
           const missing = validateFields();
           proceedBtn.classList.remove("hidden");
@@ -595,7 +607,6 @@
           const missingData = [];
           const completedData = [];
 
-          // Check Request Type for completed data
           const requestTypeRadios = document.getElementsByName("Is_this_a_quote_or_a_change_request__c");
           let requestTypeValue = "";
           for (let radio of requestTypeRadios) {
@@ -608,7 +619,6 @@
             completedData.push(`Request Type = ${requestTypeValue}`);
           }
 
-          // Check regular fields
           fieldData.forEach((field) => {
             const inputElem = document.getElementById(field.id);
             if (!inputElem) return;
@@ -632,7 +642,6 @@
             }
           });
 
-          // Add Other location fields to completed data if filled
           if (vehicleLocationSelect.value === "Other") {
             const otherFields = [
               { id: "primaryLocationAddr1", label: "Primary Location Address 1" },
@@ -677,12 +686,10 @@
           dialog.classList.remove("hidden");
         });
 
-        // Edit button handler
         editBtn.addEventListener("click", () => {
           dialog.classList.add("hidden");
         });
 
-        // Proceed button handler
         proceedBtn.addEventListener("click", () => {
           dialog.classList.add("hidden");
           form.submit();
@@ -695,10 +702,7 @@
         });
 
         window.addEventListener("keydown", (e) => {
-          if (
-            e.key === "Escape" &&
-            !dialog.classList.contains("hidden")
-          ) {
+          if (e.key === "Escape" && !dialog.classList.contains("hidden")) {
             dialog.classList.add("hidden");
           }
         });
