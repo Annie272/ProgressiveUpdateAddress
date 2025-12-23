@@ -54,7 +54,7 @@
 
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-2"
-            >Select the Request Type:</label
+            >Select the Request Type:<span class="star">*</span></label
           >
           <div class="flex space-x-4 mb-2">
             <label class="inline-flex items-center ">
@@ -62,7 +62,6 @@
                 type="radio"
                 name="Is_this_a_quote_or_a_change_request__c"
                 value="Quote"
-                required
                 class="mr-2 "
               />Quote
             </label>
@@ -71,7 +70,6 @@
                 type="radio"
                 name="Is_this_a_quote_or_a_change_request__c"
                 value="Endorse"
-                required
                 class="mr-2"
               />Endorsement
             </label>
@@ -303,11 +301,11 @@
             for="vehicleLocationType"
             class="block text-sm font-medium text-gray-700"
           >
-            Set Vehicle Location as- <span class="star">*</span>
+            Is mailing same as garaging?<span class="star">*</span>
           </label>
           <select
             id="vehicleLocationType"
-            name="Vehicle_Location_Verification"
+            name="Vehicle_Location_Type__c"
             class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
             required
           >
@@ -330,7 +328,7 @@
             <input
               type="text"
               id="primaryLocationAddr1"
-              name="Address_Line_1_GL__c"
+              name="Primary_Location_Address_1__c"
               class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
               autocomplete="off"
             />
@@ -346,7 +344,7 @@
             <input
               type="text"
               id="primaryLocationAddr2"
-              name="Address_Line_2_GL__c"
+              name="Primary_Location_Address_2__c"
               class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
               autocomplete="off"
             />
@@ -364,7 +362,7 @@
               <input
                 type="text"
                 id="primaryLocationCity"
-                name="city_2__c"
+                name="Primary_Location_City__c"
                 class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
                 autocomplete="off"
               />
@@ -380,7 +378,7 @@
               <input
                 type="text"
                 id="primaryLocationZip"
-                name="zip_2__c"
+                name="Primary_Location_Zip__c"
                 class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
                 autocomplete="off"
               />
@@ -515,7 +513,7 @@
           },
         });
 
-        // Fields for validation
+        // Fields for validation - REMOVED requestType from fieldData array
         const fieldData = [
           { id: "email", label: "Email", type: "email" },
           { id: "00NU7000005zuX3", label: "Policy Number" },
@@ -529,12 +527,27 @@
           { id: "city1", label: "City" },
           { id: "state1", label: "State" },
           { id: "zip1", label: "Zip" },
-          { id: "vehicleLocationType", label: "Set Vehicle Location as-" }
+          { id: "vehicleLocationType", label: "Is mailing same as garaging?" }
         ];
 
-        // Validation function
+        // Validation function with separate request type check
         function validateFields() {
           const missing = [];
+          
+          // Check Request Type radio buttons
+          const requestTypeRadios = document.getElementsByName("Is_this_a_quote_or_a_change_request__c");
+          let requestTypeSelected = false;
+          for (let radio of requestTypeRadios) {
+            if (radio.checked) {
+              requestTypeSelected = true;
+              break;
+            }
+          }
+          if (!requestTypeSelected) {
+            missing.push("Request Type");
+          }
+
+          // Check regular fields
           fieldData.forEach((field) => {
             if (field.type === "email") {
               const input = document.getElementById(field.id);
@@ -582,6 +595,20 @@
           const missingData = [];
           const completedData = [];
 
+          // Check Request Type for completed data
+          const requestTypeRadios = document.getElementsByName("Is_this_a_quote_or_a_change_request__c");
+          let requestTypeValue = "";
+          for (let radio of requestTypeRadios) {
+            if (radio.checked) {
+              requestTypeValue = radio.value;
+              break;
+            }
+          }
+          if (requestTypeValue) {
+            completedData.push(`Request Type = ${requestTypeValue}`);
+          }
+
+          // Check regular fields
           fieldData.forEach((field) => {
             const inputElem = document.getElementById(field.id);
             if (!inputElem) return;
