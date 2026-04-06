@@ -999,26 +999,30 @@ if (addressTypeSelect.value === "Domestic") {
 )?.value || "";
 
 const allFormData = {
-  Email: document.getElementById("email")?.value || "",
+  email: document.getElementById("email")?.value?.trim() || "",
   Is_this_a_quote_or_a_change_request: selectedRequestType,
-  Policy_Number: document.getElementById("00NU7000005zuX3")?.value || "",
-  Effective_Date: document.getElementById("00NU7000005zuLl")?.value || "",
-  Address_Type: document.getElementById("addressType")?.value || "",
-  Address_Line_1: document.getElementById("addressLine1_1")?.value || "",
-  Address_Line_2: document.getElementById("addressLine2_1")?.value || "",
-  City: document.getElementById("city1")?.value || "",
-  State: document.getElementById("state1")?.value || "",
-  Zip: document.getElementById("zip1")?.value || "",
-  Primary_Residence: document.getElementById("primaryResidence")?.value || "",
+
+  Policy_Action: document.getElementById("00NU7000005zuNN")?.value || "",
+  Policy_Number: document.getElementById("00NU7000005zuX3")?.value?.trim() || "",
+  Date: document.getElementById("00NU7000005zuLl")?.value?.trim() || "",
+
+  AddressType: document.getElementById("addressType")?.value || "",
+  address1: document.getElementById("addressLine11")?.value?.trim() || "",
+  address21: document.getElementById("addressLine21")?.value?.trim() || "",
+  city1: document.getElementById("city1")?.value?.trim() || "",
+  state1: document.getElementById("state1")?.value || "",
+  zip1: document.getElementById("zip1")?.value?.trim() || "",
+  PrimaryResidence: document.getElementById("primaryResidence")?.value || "",
   Country: document.getElementById("country")?.value || "",
-  PO_Box_or_Military_Address: document.getElementById("poBoxMilitary")?.value || "",
+  PO_Box_or_military_address: document.getElementById("poBoxMilitary")?.value || "",
+
   Vehicle_Location_Verification: document.getElementById("vehicleLocationType")?.value || "",
-  Primary_Location_Address_1: document.getElementById("primaryLocationAddr1")?.value || "",
-  Primary_Location_Address_2: document.getElementById("primaryLocationAddr2")?.value || "",
-  Primary_Location_City: document.getElementById("primaryLocationCity")?.value || "",
-  Primary_Location_Zip: document.getElementById("primaryLocationZip")?.value || "",
-  Carrier: "Progressive",
-  Policy_Action: document.getElementById("00NU7000005zuNN")?.value || ""
+  Primary_Location_Address1: document.getElementById("primaryLocationAddr1")?.value?.trim() || "",
+  Primary_Location_Address2: document.getElementById("primaryLocationAddr2")?.value?.trim() || "",
+  Primary_Location_City: document.getElementById("primaryLocationCity")?.value?.trim() || "",
+  Primary_Location_Zip: document.getElementById("primaryLocationZip")?.value?.trim() || "",
+
+  Carrier: document.querySelector('input[name="Carrier__c"]')?.value || ""
 };
 
 document.getElementById("allFormData").value = JSON.stringify(allFormData);
