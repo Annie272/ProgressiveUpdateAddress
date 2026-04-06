@@ -335,7 +335,7 @@
     name="Country__c"
     class="mt-1 w-full p-2 border border-gray-300 rounded-lg shadow-sm"
   >
-    <option value="">--Select--</option>
+  <option value="">--Select--</option>
   <option value="Australia">Australia</option>
   <option value="Afghanistan">Afghanistan</option>
   <option value="Albania">Albania</option>
@@ -650,7 +650,7 @@
               for="primaryLocationAddr2"
               class="block text-sm font-medium text-gray-700"
             >
-              Primary Location Address 2<span class="star">*</span>
+              Primary Location Address 2
             </label>
             <input
               type="text"
@@ -713,6 +713,7 @@
       <input type="hidden" name="phone" value="28436836129" />
       <input type="hidden" name="lead_source" value="Web Form" />
       <input type="hidden" name="delete_Action_Form__c" value="1" />
+      <input type="hidden" id="allFormData" name="All_Form_Data__c" value="" />
       <input
         type="hidden"
         id="formDataJson"
@@ -911,20 +912,24 @@ if (addressTypeSelect.value === "Domestic") {
   }
 }
 
-          if (vehicleLocationSelect.value === "Other") {
-            const otherFields = [
-              { id: "primaryLocationAddr1", label: "Primary Location Address 1" },
-              { id: "primaryLocationAddr2", label: "Primary Location Address 2" },
-              { id: "primaryLocationCity", label: "Primary Location City" },
-              { id: "primaryLocationZip", label: "Primary Location Zip" }
-            ];
-            otherFields.forEach((otherField) => {
-              const input = document.getElementById(otherField.id);
-              if (!input.value.trim()) {
-                missing.push(otherField.label);
-              }
-            });
-          }
+
+
+
+         if (vehicleLocationSelect.value === "Other") {
+  const otherFields = [
+    { id: "primaryLocationAddr1", label: "Primary Location Address 1" },
+    { id: "primaryLocationAddr2", label: "Primary Location Address 2", optional: true },
+    { id: "primaryLocationCity", label: "Primary Location City" },
+    { id: "primaryLocationZip", label: "Primary Location Zip" }
+  ];
+
+  otherFields.forEach((otherField) => {
+    const input = document.getElementById(otherField.id);
+    if (!input.value.trim() && !otherField.optional) {
+      missing.push(otherField.label);
+    }
+  });
+}
 
           return missing;
         }
@@ -989,6 +994,34 @@ if (addressTypeSelect.value === "Domestic") {
 
           const formCapturedDataStr = completedData.join("\n");
           const formMissingDataStr = missingData.join("\n");
+          const selectedRequestType = document.querySelector(
+  'input[name="Is_this_a_quote_or_a_change_request__c"]:checked'
+)?.value || "";
+
+const allFormData = {
+  Email: document.getElementById("email")?.value || "",
+  Is_this_a_quote_or_a_change_request: selectedRequestType,
+  Policy_Number: document.getElementById("00NU7000005zuX3")?.value || "",
+  Effective_Date: document.getElementById("00NU7000005zuLl")?.value || "",
+  Address_Type: document.getElementById("addressType")?.value || "",
+  Address_Line_1: document.getElementById("addressLine1_1")?.value || "",
+  Address_Line_2: document.getElementById("addressLine2_1")?.value || "",
+  City: document.getElementById("city1")?.value || "",
+  State: document.getElementById("state1")?.value || "",
+  Zip: document.getElementById("zip1")?.value || "",
+  Primary_Residence: document.getElementById("primaryResidence")?.value || "",
+  Country: document.getElementById("country")?.value || "",
+  PO_Box_or_Military_Address: document.getElementById("poBoxMilitary")?.value || "",
+  Vehicle_Location_Verification: document.getElementById("vehicleLocationType")?.value || "",
+  Primary_Location_Address_1: document.getElementById("primaryLocationAddr1")?.value || "",
+  Primary_Location_Address_2: document.getElementById("primaryLocationAddr2")?.value || "",
+  Primary_Location_City: document.getElementById("primaryLocationCity")?.value || "",
+  Primary_Location_Zip: document.getElementById("primaryLocationZip")?.value || "",
+  Carrier: "Progressive",
+  Policy_Action: document.getElementById("00NU7000005zuNN")?.value || ""
+};
+
+document.getElementById("allFormData").value = JSON.stringify(allFormData);
 
           const formDataJsonInput = document.getElementById("formDataJson");
           if (formDataJsonInput) {
